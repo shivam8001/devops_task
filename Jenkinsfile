@@ -5,7 +5,8 @@ pipeline {
         AWS_REGION = "ap-south-1"
         ECR_REPO = "554461595648.dkr.ecr.ap-south-1.amazonaws.com/devops-task"
         ECS_CLUSTER = "devops-task-cluster"
-        ECS_SERVICE = "devops-task-service"
+        ECS_SERVICE = "devops-task-app-service-potubetn"
+
         IMAGE_TAG = "${env.BUILD_NUMBER}"  // unique tag per build
     }
 
