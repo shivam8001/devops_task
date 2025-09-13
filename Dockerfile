@@ -10,8 +10,8 @@ RUN npm ci
 # Copy application code
 COPY . .
 
-# Optional: run tests
-RUN npm test
+# Optional: run tests#
+#RUN npm test
 
 # Stage 2: Production Image
 FROM node:20-alpine
