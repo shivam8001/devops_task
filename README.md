@@ -1,61 +1,58 @@
-# Logo Server
+# DevOps Task
 
-A simple Express.js web server that serves the Swayatt logo image.
+## 1. Objective
+Set up a simple **CI/CD pipeline** for a sample Node.js application using **AWS**, **Jenkins**, and **GitHub**.  
+The pipeline demonstrates automation, scalability, and best DevOps practices.
 
-## What is this app?
+---
 
-This is a lightweight Node.js application built with Express.js that serves a single logo image (`logoswayatt.png`) when accessed through a web browser. When you visit the root URL, the server responds by displaying the Swayatt logo.
+## 2. Task Details
 
-## Prerequisites
+### a. Source Code & Version Control
+- Fork/clone the Node.js app: [https://github.com/shivam8001/devops_task.git](https://github.com/shivam8001/devops_task.git)
+- Push code to your GitHub repository.
+- Use a clear branching strategy:
+  - `main` → Production-ready code
+  - `dev` → Development and testing
 
-- Node.js (version 12 or higher)
-- npm (Node Package Manager)
+### b. CI/CD Pipeline (Jenkins)
+- Jenkins pipeline triggered via **GitHub webhook**.
+- **Pipeline stages:**
+  1. **Build**: Install dependencies
+     ```bash
+     npm install
+     ```
+  2. **Dockerize**: Build Docker image
+     ```bash
+     docker build -t devops-task:latest .
+     ```
+  3. **Push to Registry**: Push Docker image to **AWS ECR**
+     ```bash
+     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 554461595648.dkr.ecr.ap-south-1.amazonaws.com
+     docker tag devops-task:latest 554461595648.dkr.ecr.ap-south-1.amazonaws.com/devops-task:latest
+     docker push 554461595648.dkr.ecr.ap-south-1.amazonaws.com/devops-task:latest
+     ```
+  4. **Deploy**: Deploy container to **AWS ECS Fargate**
+     ```bash
+     aws ecs update-service \
+       --cluster devops-task-cluster \
+       --service devops-task-app-service-potubetn \
+       --force-new-deployment \
+       --region ap-south-1
+     ```
 
-## Installation
+### c. Infrastructure (AWS)
+- Deployed using:
+  - **AWS ECS Fargate** cluster
+  - **Application Load Balancer**
+  - **Security Group** with HTTP access on port 80
+  - **Target Group** linked to ECS service on port 3000
 
-1. Clone or download this repository
-2. Navigate to the project directory:
-   ```bash
-   cd "devops task"
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
+### d. Monitoring & Logging
+- **AWS CloudWatch** used for monitoring and logging.
+- ECS tasks send logs to CloudWatch log group: `/ecs/devops-task-logs`
+- Logs can be viewed in AWS Management Console → CloudWatch → Log groups
 
-## How to Start the App
+---
 
-Run the following command:
-```bash
-npm start
-```
 
-The server will start and display:
-```
-Server running on http://localhost:3000
-```
-
-## Usage
-
-Once the server is running, open your web browser and navigate to:
-```
-http://localhost:3000
-```
-
-You will see the Swayatt logo displayed in your browser.
-
-## Project Structure
-
-```
-├── app.js              # Main server file
-├── package.json        # Project dependencies and scripts
-├── logoswayatt.png     # Logo image file
-└── README.md          # This file
-```
-
-## Technical Details
-
-- **Framework**: Express.js
-- **Port**: 3000
-- **Endpoint**: GET `/` - serves the logo image
-- **File served**: `logoswayatt.png`
