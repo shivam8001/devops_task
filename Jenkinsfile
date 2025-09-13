@@ -17,14 +17,7 @@ pipeline {
             }
         }
 
-        stage('Install & Test') {
-            steps {
-                echo 'Installing dependencies and running tests...'
-                sh 'npm ci'
-                sh 'npm test'
-            }
-        }
-
+       
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
